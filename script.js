@@ -376,6 +376,139 @@ scrollToTopBtn.addEventListener('click', () => {
     });
 });
 
+// ===== PHOTO GALLERY MODAL =====
+const photoGalleryModal = document.getElementById('photo-gallery-modal');
+const btnDecouvrir = document.getElementById('btn-decouvrir');
+const btnEnSavoirPlus = document.getElementById('btn-en-savoir-plus');
+const closeGalleryBtn = document.getElementById('close-gallery');
+const galleryGrid = document.getElementById('gallery-grid');
+const galleryEmpty = document.getElementById('gallery-empty');
+
+// Liste des extensions d'images supportées
+const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+
+// Liste des images à charger depuis le dossier images/produit
+// Vous pouvez ajouter vos propres images ici ou elles seront détectées automatiquement
+const productImages = [
+    'images/produit/image1.jpg',
+    'images/produit/image2.jpg',
+    'images/produit/image3.jpg',
+    'images/produit/image4.jpg',
+    'images/produit/image5.jpg',
+    'images/produit/image6.jpg',
+    'images/produit/image7.jpg',
+    'images/produit/image8.jpg',
+    'images/produit/image9.jpg',
+    'images/produit/image10.jpg',
+];
+
+// Fonction pour charger les images de la galerie
+function loadGalleryImages() {
+    if (!galleryGrid) return;
+    
+    galleryGrid.innerHTML = '';
+    let loadedImages = 0;
+    let failedImages = 0;
+    let totalImages = productImages.length;
+
+    // Essayer de charger les images depuis le dossier produit
+    productImages.forEach((imagePath, index) => {
+        const img = new Image();
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        
+        img.src = imagePath;
+        img.alt = `Produit ${index + 1}`;
+        img.loading = 'lazy';
+        
+        img.onload = () => {
+            galleryItem.appendChild(img);
+            galleryGrid.appendChild(galleryItem);
+            loadedImages++;
+            checkGalleryState();
+        };
+        
+        img.onerror = () => {
+            failedImages++;
+            checkGalleryState();
+        };
+    });
+
+    function checkGalleryState() {
+        // Si aucune image n'a été chargée après toutes les tentatives, afficher le message vide
+        if (loadedImages === 0 && failedImages === totalImages) {
+            galleryGrid.style.display = 'none';
+            if (galleryEmpty) {
+                galleryEmpty.style.display = 'block';
+            }
+        } else if (loadedImages > 0) {
+            galleryGrid.style.display = 'grid';
+            if (galleryEmpty) {
+                galleryEmpty.style.display = 'none';
+            }
+        }
+    }
+
+    // Vérifier après un délai si aucune image n'a été chargée
+    setTimeout(() => {
+        if (loadedImages === 0) {
+            galleryGrid.style.display = 'none';
+            if (galleryEmpty) {
+                galleryEmpty.style.display = 'block';
+            }
+        }
+    }, 1500);
+}
+
+// Ouvrir la galerie
+function openGallery() {
+    photoGalleryModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    loadGalleryImages();
+}
+
+// Fermer la galerie
+function closeGallery() {
+    photoGalleryModal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Event listeners pour les boutons
+if (btnDecouvrir) {
+    btnDecouvrir.addEventListener('click', openGallery);
+}
+
+if (btnEnSavoirPlus) {
+    btnEnSavoirPlus.addEventListener('click', () => {
+        const servicesSection = document.querySelector('#services');
+        if (servicesSection) {
+            servicesSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+}
+
+if (closeGalleryBtn) {
+    closeGalleryBtn.addEventListener('click', closeGallery);
+}
+
+// Fermer la galerie en cliquant sur l'overlay
+if (photoGalleryModal) {
+    const overlay = photoGalleryModal.querySelector('.photo-gallery-overlay');
+    if (overlay) {
+        overlay.addEventListener('click', closeGallery);
+    }
+
+    // Fermer avec la touche Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && photoGalleryModal.classList.contains('active')) {
+            closeGallery();
+        }
+    });
+}
+
 // ===== INITIALIZE ANIMATIONS =====
 document.addEventListener('DOMContentLoaded', () => {
     // Add fade-in class to hero content

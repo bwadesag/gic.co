@@ -44,8 +44,8 @@
                 <h1 class="hero-title">Produits Frais & Naturels</h1>
                 <p class="hero-description">Découvrez notre gamme de produits agricoles, d'élevage et d'apiculture cultivés avec passion et respect de l'environnement.</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary">Découvrir nos produits</button>
-                    <button class="btn btn-outline">En savoir plus</button>
+                    <button class="btn btn-primary" id="btn-decouvrir">Découvrir nos produits</button>
+                    <button class="btn btn-outline" id="btn-en-savoir-plus">En savoir plus</button>
                 </div>
             </div>
             <div class="hero-image">
@@ -219,7 +219,7 @@
                     
                     <div class="product-card card-hover">
                         <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tilapia">
+                            <img src="images/tilapia.webp" alt="Tilapia">
                             <div class="label label-featured">Frais</div>
                         </div>
                         <div class="product-info">
@@ -360,6 +360,28 @@
             </div>
         </div>
     </footer>
+
+    <!-- Galerie Photo Modal -->
+    <div id="photo-gallery-modal" class="photo-gallery-modal">
+        <div class="photo-gallery-overlay"></div>
+        <div class="photo-gallery-container">
+            <button class="photo-gallery-close" id="close-gallery">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="photo-gallery-header">
+                <h2>Galerie de nos produits</h2>
+                <p>Découvrez nos produits frais et de qualité</p>
+            </div>
+            <div class="photo-gallery-grid" id="gallery-grid">
+                <!-- Les images seront chargées dynamiquement depuis le dossier images/produit -->
+            </div>
+            <div class="photo-gallery-empty" id="gallery-empty" style="display: none;">
+                <i class="fas fa-images"></i>
+                <p>Aucune image disponible pour le moment.</p>
+                <p class="gallery-empty-subtitle">Les images seront ajoutées prochainement dans le dossier produit.</p>
+            </div>
+        </div>
+    </div>
 
     <!-- EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
