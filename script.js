@@ -120,112 +120,7 @@ if (heroStats) {
     heroStatsObserver.observe(heroStats);
 }
 
-// ===== EMAILJS CONFIGURATION =====
-// Remplacez ces valeurs par vos propres identifiants EmailJS
-const EMAILJS_SERVICE_ID = 'service_xxxxxxx'; // À remplacer par votre Service ID
-const EMAILJS_TEMPLATE_ID = 'template_xxxxxxx'; // À remplacer par votre Template ID
-const EMAILJS_PUBLIC_KEY = 'your_public_key_here'; // À remplacer par votre Public Key
-
-// Initialiser EmailJS
-(function() {
-    emailjs.init(EMAILJS_PUBLIC_KEY);
-})();
-
-// ===== FORM HANDLING WITH EMAILJS =====
-const contactForm = document.getElementById('contact-form');
-const submitBtn = document.getElementById('submit-btn');
-const btnText = document.getElementById('btn-text');
-const btnLoading = document.getElementById('btn-loading');
-const formMessage = document.getElementById('form-message');
-
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Récupérer les données du formulaire
-        const formData = new FormData(contactForm);
-        const templateParams = {
-            from_name: formData.get('from_name'),
-            from_email: formData.get('from_email'),
-            subject: formData.get('subject'),
-            message: formData.get('message'),
-            to_email: 'gic.coop.ca@gmail.com' // Votre adresse email de réception
-        };
-        
-        // Validation simple
-        if (!templateParams.from_name || !templateParams.from_email || !templateParams.subject || !templateParams.message) {
-            showMessage('Veuillez remplir tous les champs', 'error');
-            return;
-        }
-        
-        // Validation email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(templateParams.from_email)) {
-            showMessage('Veuillez entrer une adresse email valide', 'error');
-            return;
-        }
-        
-        // Afficher l'état de chargement
-        setLoadingState(true);
-        
-        try {
-            // Envoyer l'email via EmailJS
-            const response = await emailjs.send(
-                EMAILJS_SERVICE_ID,
-                EMAILJS_TEMPLATE_ID,
-                templateParams
-            );
-            
-            if (response.status === 200) {
-                showMessage('Message envoyé avec succès ! Nous vous contacterons bientôt.', 'success');
-                contactForm.reset();
-            } else {
-                throw new Error('Erreur lors de l\'envoi');
-            }
-        } catch (error) {
-            console.error('Erreur EmailJS:', error);
-            showMessage('Erreur lors de l\'envoi du message. Veuillez réessayer ou nous contacter directement.', 'error');
-        } finally {
-            setLoadingState(false);
-        }
-    });
-}
-
-// Fonction pour afficher les messages
-function showMessage(text, type) {
-    formMessage.textContent = text;
-    formMessage.className = `form-message ${type}`;
-    formMessage.style.display = 'block';
-    
-    // Style selon le type
-    if (type === 'success') {
-        formMessage.style.backgroundColor = '#d1fae5';
-        formMessage.style.color = '#065f46';
-        formMessage.style.border = '1px solid #a7f3d0';
-    } else {
-        formMessage.style.backgroundColor = '#fee2e2';
-        formMessage.style.color = '#991b1b';
-        formMessage.style.border = '1px solid #fca5a5';
-    }
-    
-    // Masquer le message après 5 secondes
-    setTimeout(() => {
-        formMessage.style.display = 'none';
-    }, 5000);
-}
-
-// Fonction pour gérer l'état de chargement
-function setLoadingState(loading) {
-    if (loading) {
-        btnText.style.display = 'none';
-        btnLoading.style.display = 'inline';
-        submitBtn.disabled = true;
-    } else {
-        btnText.style.display = 'inline';
-        btnLoading.style.display = 'none';
-        submitBtn.disabled = false;
-    }
-}
+// Le bouton WhatsApp est maintenant un simple lien HTML, aucun JavaScript nécessaire
 
 // ===== NEWSLETTER SUBSCRIPTION =====
 const newsletterForm = document.querySelector('.newsletter');
@@ -386,62 +281,134 @@ const galleryEmpty = document.getElementById('gallery-empty');
 
 // Liste des extensions d'images supportées
 const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+// Liste des extensions de vidéos supportées
+const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov'];
 
-// Liste des images à charger depuis le dossier images/produit
-// Vous pouvez ajouter vos propres images ici ou elles seront détectées automatiquement
-const productImages = [
-    'images/produit/image1.jpg',
-    'images/produit/image2.jpg',
-    'images/produit/image3.jpg',
-    'images/produit/image4.jpg',
-    'images/produit/image5.jpg',
-    'images/produit/image6.jpg',
-    'images/produit/image7.jpg',
-    'images/produit/image8.jpg',
-    'images/produit/image9.jpg',
-    'images/produit/image10.jpg',
+// Liste des fichiers produits (images et vidéos) à charger depuis le dossier produits
+const productFiles = [
+    'produits/poisson.jpg',
+    'produits/lapin1.mp4',
+    'produits/porc.mp4',
+    'produits/poule.mp4',
+    'produits/poisson video.mp4',
 ];
 
-// Fonction pour charger les images de la galerie
+// Fonction pour vérifier si un fichier est une vidéo
+function isVideoFile(filePath) {
+    const lowerPath = filePath.toLowerCase();
+    return videoExtensions.some(ext => lowerPath.endsWith(ext));
+}
+
+// Fonction pour charger les images et vidéos de la galerie
 function loadGalleryImages() {
     if (!galleryGrid) return;
     
     galleryGrid.innerHTML = '';
-    let loadedImages = 0;
-    let failedImages = 0;
-    let totalImages = productImages.length;
+    let loadedItems = 0;
+    let failedItems = 0;
+    let totalItems = productFiles.length;
 
-    // Essayer de charger les images depuis le dossier produit
-    productImages.forEach((imagePath, index) => {
-        const img = new Image();
+    // Charger les fichiers (images et vidéos) depuis le dossier produits
+    productFiles.forEach((filePath, index) => {
         const galleryItem = document.createElement('div');
         galleryItem.className = 'gallery-item';
         
-        img.src = imagePath;
-        img.alt = `Produit ${index + 1}`;
-        img.loading = 'lazy';
-        
-        img.onload = () => {
-            galleryItem.appendChild(img);
-            galleryGrid.appendChild(galleryItem);
-            loadedImages++;
-            checkGalleryState();
-        };
-        
-        img.onerror = () => {
-            failedImages++;
-            checkGalleryState();
-        };
+        if (isVideoFile(filePath)) {
+            // Créer un élément vidéo
+            const video = document.createElement('video');
+            video.src = filePath;
+            video.controls = true;
+            video.muted = false;
+            video.loop = false;
+            video.preload = 'metadata';
+            video.className = 'gallery-video';
+            
+            // Ajouter un indicateur vidéo
+            const videoBadge = document.createElement('div');
+            videoBadge.className = 'video-badge';
+            videoBadge.innerHTML = '<i class="fas fa-play-circle"></i> Vidéo';
+            
+            // Limiter la lecture à 10 secondes maximum
+            const MAX_VIDEO_TIME = 10; // 10 secondes
+            
+            video.addEventListener('loadedmetadata', () => {
+                video.currentTime = 0;
+            });
+            
+            // Surveiller le temps de lecture et arrêter à 10 secondes
+            video.addEventListener('timeupdate', () => {
+                if (video.currentTime >= MAX_VIDEO_TIME) {
+                    video.pause();
+                    video.currentTime = MAX_VIDEO_TIME;
+                }
+            });
+            
+            // Vérifier avant de jouer
+            video.addEventListener('play', () => {
+                if (video.currentTime >= MAX_VIDEO_TIME) {
+                    video.pause();
+                    video.currentTime = MAX_VIDEO_TIME;
+                }
+            });
+            
+            // Empêcher de dépasser 10 secondes même si l'utilisateur fait glisser la barre de progression
+            video.addEventListener('seeked', () => {
+                if (video.currentTime > MAX_VIDEO_TIME) {
+                    video.currentTime = MAX_VIDEO_TIME;
+                    video.pause();
+                }
+            });
+            
+            // Empêcher de chercher au-delà de 10 secondes
+            video.addEventListener('seeking', () => {
+                if (video.currentTime > MAX_VIDEO_TIME) {
+                    video.currentTime = MAX_VIDEO_TIME;
+                }
+            });
+            
+            video.onloadeddata = () => {
+                galleryItem.appendChild(video);
+                galleryItem.appendChild(videoBadge);
+                galleryGrid.appendChild(galleryItem);
+                loadedItems++;
+                checkGalleryState();
+            };
+            
+            video.onerror = () => {
+                failedItems++;
+                checkGalleryState();
+            };
+            
+        } else {
+            // Créer un élément image
+            const img = new Image();
+            img.src = filePath;
+            img.alt = `Produit ${index + 1}`;
+            img.loading = 'lazy';
+            img.className = 'gallery-image';
+            
+            img.onload = () => {
+                galleryItem.appendChild(img);
+                galleryGrid.appendChild(galleryItem);
+                loadedItems++;
+                checkGalleryState();
+            };
+            
+            img.onerror = () => {
+                failedItems++;
+                checkGalleryState();
+            };
+        }
     });
 
     function checkGalleryState() {
-        // Si aucune image n'a été chargée après toutes les tentatives, afficher le message vide
-        if (loadedImages === 0 && failedImages === totalImages) {
+        // Si aucun fichier n'a été chargé après toutes les tentatives, afficher le message vide
+        if (loadedItems === 0 && failedItems === totalItems) {
             galleryGrid.style.display = 'none';
             if (galleryEmpty) {
                 galleryEmpty.style.display = 'block';
             }
-        } else if (loadedImages > 0) {
+        } else if (loadedItems > 0) {
             galleryGrid.style.display = 'grid';
             if (galleryEmpty) {
                 galleryEmpty.style.display = 'none';
@@ -449,15 +416,15 @@ function loadGalleryImages() {
         }
     }
 
-    // Vérifier après un délai si aucune image n'a été chargée
+    // Vérifier après un délai si aucun fichier n'a été chargé
     setTimeout(() => {
-        if (loadedImages === 0) {
+        if (loadedItems === 0) {
             galleryGrid.style.display = 'none';
             if (galleryEmpty) {
                 galleryEmpty.style.display = 'block';
             }
         }
-    }, 1500);
+    }, 2000);
 }
 
 // Ouvrir la galerie

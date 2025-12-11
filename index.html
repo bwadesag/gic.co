@@ -271,42 +271,24 @@
     <section id="contact" class="contact">
         <div class="container">
             <div class="contact-content">
-                <div class="contact-info">
+                <div class="contact-header">
                     <h2>Contactez-nous</h2>
-                    <p>Nous sommes là pour répondre à toutes vos questions</p>
-                    <div class="map-container">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.8!2d11.5!3d3.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwNDgnMDAuMCJOIDExwrAzMCcwMC4wIkU!5e0!3m2!1sfr!2scm!4v1234567890"
-                            width="100%" 
-                            height="300" 
-                            style="border:0; border-radius: 15px;" 
-                            allowfullscreen="" 
-                            loading="lazy">
-                        </iframe>
-                    </div>
+                    <p>Nous sommes là pour répondre à toutes vos questions. Envoyez-nous votre message via WhatsApp !</p>
                 </div>
-                <div class="contact-form">
-                    <form id="contact-form">
-                        <div class="form-group">
-                            <input type="text" name="from_name" placeholder="Votre nom" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" name="from_email" placeholder="Votre email" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="subject" placeholder="Sujet" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea name="message" placeholder="Votre message" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="submit-btn">
-                            <span id="btn-text">Envoyer le message</span>
-                            <span id="btn-loading" style="display: none;">
-                                <i class="fas fa-spinner fa-spin"></i> Envoi en cours...
-                            </span>
-                        </button>
-                    </form>
-                    <div id="form-message" style="display: none; margin-top: 15px; padding: 10px; border-radius: 5px;"></div>
+                <div class="map-container-centered">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3979.8!2d11.5!3d3.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwNDgnMDAuMCJOIDExwrAzMCcwMC4wIkU!5e0!3m2!1sfr!2scm!4v1234567890"
+                        width="100%" 
+                        height="400" 
+                        style="border:0; border-radius: 15px;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+                <div class="contact-button-container">
+                    <a href="https://wa.me/237698712193" target="_blank" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 10px; font-size: 1.1rem; padding: 15px 30px;">
+                        <i class="fab fa-whatsapp"></i> Envoyer un message via WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
@@ -332,7 +314,7 @@
                     <ul>
                         <li><a href="#home">Accueil</a></li>
                         <li><a href="#about">À propos</a></li>
-                        <li><a href="#products">Produits</a></li>
+                        <li><a href="#services">Produits</a></li>
                         <li><a href="#services">Services</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
@@ -370,21 +352,19 @@
             </button>
             <div class="photo-gallery-header">
                 <h2>Galerie de nos produits</h2>
-                <p>Découvrez nos produits frais et de qualité</p>
+                <p>Découvrez nos produits frais et de qualité en photos et vidéos</p>
             </div>
             <div class="photo-gallery-grid" id="gallery-grid">
                 <!-- Les images seront chargées dynamiquement depuis le dossier images/produit -->
             </div>
             <div class="photo-gallery-empty" id="gallery-empty" style="display: none;">
                 <i class="fas fa-images"></i>
-                <p>Aucune image disponible pour le moment.</p>
-                <p class="gallery-empty-subtitle">Les images seront ajoutées prochainement dans le dossier produit.</p>
+                <p>Aucun média disponible pour le moment.</p>
+                <p class="gallery-empty-subtitle">Les photos et vidéos seront ajoutées prochainement dans le dossier produits.</p>
             </div>
         </div>
     </div>
 
-    <!-- EmailJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
